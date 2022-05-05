@@ -2,6 +2,13 @@ using UnityEngine;
 
 public class BoardController : MonoBehaviour
 {
+    private BoardController() { } // To save the "Singleton"
+    public static BoardController instance;
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private Tile activeSelection;
 
     public void CheckSelectionTile(Tile tile)
@@ -12,21 +19,24 @@ public class BoardController : MonoBehaviour
         }
         else
         {
-            if (!tile.IsSelect && activeSelection == null)
+            if (!tile.Move)
             {
-                SelectionTile(tile);
-            }
-            else
-            {
-                if (IsTileNearby(tile))
+                if (!tile.IsSelect && activeSelection == null)
                 {
-                    SwapTiles(tile);
-                    DeselectionTile(activeSelection);
+                    SelectionTile(tile);
                 }
                 else
                 {
-                    DeselectionTile(activeSelection);
-                    SelectionTile(tile);
+                    if (IsTileNearby(tile))
+                    {
+                        SwapTiles(tile);
+                        DeselectionTile(activeSelection);
+                    }
+                    else
+                    {
+                        DeselectionTile(activeSelection);
+                        SelectionTile(tile);
+                    }
                 }
             }
         }
@@ -34,9 +44,10 @@ public class BoardController : MonoBehaviour
 
     private bool IsTileNearby(Tile tile)
     {
-        var xdistans = System.Math.Abs(tile.transform.localPosition.x - activeSelection.transform.localPosition.x);
-        var ydistans = System.Math.Abs(tile.transform.localPosition.y - activeSelection.transform.localPosition.y);
-        return xdistans <= tile.transform.localScale.x || ydistans <= tile.transform.localScale.y;
+        // The search for the neighboring tile is due to its actual width or height
+        float xDistance = System.Math.Abs(tile.transform.localPosition.x - activeSelection.transform.localPosition.x);
+        float yDistance = System.Math.Abs(tile.transform.localPosition.y - activeSelection.transform.localPosition.y);
+        return xDistance <= tile.transform.localScale.x || yDistance <= tile.transform.localScale.y;
     }
 
     private void SelectionTile(Tile tile)
@@ -53,6 +64,12 @@ public class BoardController : MonoBehaviour
         activeSelection = null;
     }
 
-    private void SwapTiles(Tile tile) => (tile.spriteRenderer.sprite, tile.ID, activeSelection.spriteRenderer.sprite, activeSelection.ID)
-        = (activeSelection.spriteRenderer.sprite, activeSelection.ID, tile.spriteRenderer.sprite, tile.ID);
+    private void SwapTiles(Tile tile)
+    {
+        (tile.spriteRenderer.sprite, tile.ID, activeSelection.spriteRenderer.sprite, activeSelection.ID)
+                = (activeSelection.spriteRenderer.sprite, activeSelection.ID, tile.spriteRenderer.sprite, tile.ID);
+
+        tile.Move = true;
+        UIGameBoard.instance.Step();
+    }
 }

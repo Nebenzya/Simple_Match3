@@ -1,22 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum VectorDirection
+{
+    // TODO addition of a diagonal direction
+    Horizontal,
+    Vertical
+}
+
 public class Board : MonoBehaviour
 {
-
-    private enum VectorDirection
+    private Board() { } // To save the "Singleton"
+    public static Board instance;
+    private void Awake()
     {
-        // TODO addition of a diagonal direction
-        Horizontal,
-        Vertical
+        instance = this;
     }
 
-    private int _width, _height, _xLastIndex, _yLastIndex;
-    private Tile _prefab;
-    private Tile[,] _allTiles;
-    private List<Sprite> _sprites;
-
-    public int Score { get; private set; }
+    private static int _width, _height, _xLastIndex, _yLastIndex;
+    private static Tile _prefab;
+    private static Tile[,] _allTiles;
+    private static List<Sprite> _sprites;
 
     #region Start Game
     public void StartNewGame(BoardSetting setting)
@@ -31,7 +35,7 @@ public class Board : MonoBehaviour
         CreateBoard();
     }
 
-    private void CreateBoard()
+    public void CreateBoard()
     {
         _allTiles = new Tile[_width, _height];
         float xPos = transform.position.x;
@@ -109,11 +113,9 @@ public class Board : MonoBehaviour
 
         if (isStartMove) End = toSelect ? xPos : yPos;
 
-        isStartMove = false;
-
         if (End - Start > 1)
         {
-            List<Tile> tileBuffer = new List<Tile>();
+            var tileBuffer = new List<Tile>();
 
             for (int i = Start; i <= End; i++)
             {
@@ -135,10 +137,11 @@ public class Board : MonoBehaviour
     {
         if (tileBuffer.Count > 2)
         {
-            Score += tileBuffer.Count * 50;
+            UIGameBoard.instance.Score = tileBuffer.Count;
             foreach (var tile in tileBuffer)
             {
                 tile.spriteRenderer.sprite = null;
+                tile.Move = false;
             }
         }
     }
@@ -186,6 +189,7 @@ public class Board : MonoBehaviour
             {
                 _allTiles[xPos, yPos].spriteRenderer.sprite = _allTiles[xPos, yPos + 1].spriteRenderer.sprite;
                 _allTiles[xPos, yPos].ID = _allTiles[xPos, yPos + 1].ID;
+                _allTiles[xPos, yPos].Move = _allTiles[xPos, yPos + 1].Move;
             }
             else if (yPos == _yLastIndex)
             {

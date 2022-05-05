@@ -9,26 +9,21 @@ public class BoardSetting
     public List<Sprite> sprites;
 }
 
-public class GameManager : Board
+public class GameManager : MonoBehaviour
 {
-    [Header("Настройки игрового поля")]
+    [Header("Game Setting")]
     public BoardSetting setting;
-
-    private Board _board;
-    private BoardController _controller;
 
     // Start is called before the first frame update
     void Start()
     {
-        _controller = gameObject.AddComponent<BoardController>();
-        _board = gameObject.AddComponent<Board>();
-        _board.StartNewGame(setting);
+        Board.instance.StartNewGame(setting);
     }
 
     // Update is called once per frame
     void Update()
     {
-        _board.CheckBoard();
+        Board.instance.CheckBoard();
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -36,7 +31,7 @@ public class GameManager : Board
 
             if (raycastHit != false)
             {
-                _controller.CheckSelectionTile(raycastHit.collider.gameObject.GetComponent<Tile>());
+                BoardController.instance.CheckSelectionTile(raycastHit.collider.gameObject.GetComponent<Tile>());
             }
         }
     }
