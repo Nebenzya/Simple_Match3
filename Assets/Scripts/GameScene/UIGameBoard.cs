@@ -24,6 +24,8 @@ public class UIGameBoard : MonoBehaviour
         {
             // At the entrance we get the number of matched tiles and multiply by the scoreRate
             _score += value * _scoreRate;
+
+            // ugly crutch! but we don't have to worry about generating a playing board without matches at the start or restart
             if (_step == maxStep)
             {
                 _score = 0;
@@ -37,13 +39,14 @@ public class UIGameBoard : MonoBehaviour
     public Text stepText;
     private static int maxStep = 20;
     private static int _step = maxStep;
-    
+
     public void Step()
     {
         _step--;
         if (_step <= 0)
         {
-            GameOver();
+            System.Threading.Thread.Sleep(200);
+            gameOverPanel.SetActive(true);
         }
         stepText.text = $"Steps: {_step}";
     }
@@ -53,11 +56,6 @@ public class UIGameBoard : MonoBehaviour
     {
         _score = 0;
         _step = maxStep;
-    }
-    private void GameOver()
-    {
-        System.Threading.Thread.Sleep(500);
-        gameOverPanel.SetActive(true);
     }
 
 }

@@ -47,7 +47,14 @@ public class BoardController : MonoBehaviour
         // The search for the neighboring tile is due to its actual width or height
         float xDistance = System.Math.Abs(tile.transform.localPosition.x - activeSelection.transform.localPosition.x);
         float yDistance = System.Math.Abs(tile.transform.localPosition.y - activeSelection.transform.localPosition.y);
-        return xDistance <= tile.transform.localScale.x || yDistance <= tile.transform.localScale.y;
+
+        // Tiles should not be diagonal neighbors
+        if (xDistance == 0 || yDistance == 0)
+        {
+            return xDistance <= tile.transform.localScale.x || yDistance <= tile.transform.localScale.y;
+        }
+        return false;
+
     }
 
     private void SelectionTile(Tile tile)

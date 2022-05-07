@@ -1,13 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum VectorDirection
-{
-    // TODO addition of a diagonal direction
-    Horizontal,
-    Vertical
-}
-
 public class Board : MonoBehaviour
 {
     private Board() { } // To save the "Singleton"
@@ -67,13 +60,13 @@ public class Board : MonoBehaviour
     #region Search match or empty tile
     public void CheckBoard()
     {
-        VectorDirection[] _allVectors = { VectorDirection.Horizontal, VectorDirection.Vertical };
+        Vector2[] vectors = { Vector2.up, Vector2.right };
         for (int x = 0; x < _width; x++)
         {
             for (int y = 0; y < _height; y++)
             {
                 // Looking in all directions and searching for matches
-                foreach (var vector in _allVectors)
+                foreach (var vector in vectors)
                 {
                     SearchMatch(x, y, vector);
                 }
@@ -82,36 +75,36 @@ public class Board : MonoBehaviour
         SearchEmpty();
     }
 
-    private void SearchMatch(int xPos, int yPos, VectorDirection vector)
+    private void SearchMatch(int xPos, int yPos, Vector2 vectors)
     {
         int Start = 0, End = 0, xStep = 0, yStep = 0;
         bool isStartMove = false;
+        bool IsHorizontal = vectors == Vector2.right;
 
-        if (vector == VectorDirection.Horizontal)
+        if (IsHorizontal)
             xStep = 1;
         else
             yStep = 1;
 
-        bool toSelect = xStep > yStep; // replaces the VectorDirection
-
-        if (toSelect ? xPos < _xLastIndex : yPos < _yLastIndex)
+        if (IsHorizontal ? xPos < _xLastIndex : yPos < _yLastIndex)
         {
             while (_allTiles[xPos, yPos].ID == _allTiles[xPos + xStep, yPos + yStep].ID)
             {
                 if (!isStartMove)
                 {
-                    Start = toSelect ? xPos : yPos;
+                    Start = IsHorizontal ? xPos : yPos;
                     isStartMove = true;
                 }
 
-                _ = toSelect ? ++xPos : ++yPos;
+                if (IsHorizontal) ++xPos;
+                else ++yPos;
 
-                if (!(toSelect ? xPos < _xLastIndex : yPos < _yLastIndex)) break;
+                if (!(IsHorizontal ? xPos < _xLastIndex : yPos < _yLastIndex)) break;
             }
         }
         else return;
 
-        if (isStartMove) End = toSelect ? xPos : yPos;
+        if (isStartMove) End = IsHorizontal ? xPos : yPos;
 
         if (End - Start > 1)
         {
@@ -119,7 +112,7 @@ public class Board : MonoBehaviour
 
             for (int i = Start; i <= End; i++)
             {
-                if (toSelect)
+                if (IsHorizontal)
                 {
                     tileBuffer.Add(_allTiles[i, yPos]);
                 }

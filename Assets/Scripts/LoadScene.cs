@@ -3,11 +3,13 @@ using UnityEngine.SceneManagement;
 
 public class LoadScene : MonoBehaviour
 {
+    private LoadScene() { } // To save the "Singleton"
     public static LoadScene instance;
     private void Awake()
     {
         instance = this;
     }
+
     public void LoadNewScene(string nameScene)
     {
         SceneManager.LoadScene(nameScene);
