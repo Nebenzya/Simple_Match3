@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class LoadScene : MonoBehaviour
 {
-    private LoadScene() { } // To save the "Singleton"
+    private LoadScene() { }
     public static LoadScene instance;
     private void Awake()
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BoardController : MonoBehaviour
 {
-    private BoardController() { } // To save the "Singleton"
+    private BoardController() { }
     public static BoardController instance;
     private void Awake()
     {
@@ -51,7 +51,17 @@ public class BoardController : MonoBehaviour
         // Tiles should not be diagonal neighbors
         if (xDistance == 0 || yDistance == 0)
         {
-            return xDistance <= tile.transform.localScale.x || yDistance <= tile.transform.localScale.y;
+            if (xDistance != 0)
+            {
+                xDistance = (float)System.Math.Round(xDistance, 1);
+                return tile.transform.localScale.x >  xDistance - tile.transform.localScale.x;
+            }
+
+            if (yDistance != 0)
+            {
+                yDistance = (float)System.Math.Round(yDistance, 1);
+                return tile.transform.localScale.y > yDistance - tile.transform.localScale.y;
+            }
         }
         return false;
 

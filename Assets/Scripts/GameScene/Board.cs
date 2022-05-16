@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    private Board() { } // To save the "Singleton"
+    private Board() { }
     public static Board instance;
     private void Awake()
     {

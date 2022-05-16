@@ -3,8 +3,11 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
-    public bool IsSelect { get; set; }
+
+    // ID is equal to Sprite index on the list (not unique)
+    // this allows us to quickly test for equality two tiles
     public int ID { get; set; }
+    public bool IsSelect { get; set; }
     public bool IsEmpty => spriteRenderer.sprite == null;
 
     private bool _move;

@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         {
             RaycastHit2D raycastHit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
 
-            if (raycastHit != false)
+            if (raycastHit != false && !UIGameBoard.instance.gameOverPanel.activeSelf)
             {
                 BoardController.instance.CheckSelectionTile(raycastHit.collider.gameObject.GetComponent<Tile>());
             }

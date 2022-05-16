@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class UIGameBoard : MonoBehaviour
 {
-    private UIGameBoard() { } // To save the "Singleton"
+    private UIGameBoard() { }
     public static UIGameBoard instance;
     private void Awake()
     {
