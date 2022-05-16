@@ -7,3 +7,5 @@
 
 ####  :gear: Unity:
 версия 2020.3.33f1
+
+![Игровой экран](https://github.com/Pechenuyha/Simple_Match3/blob/main/Screenshot.jpg)
